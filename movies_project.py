@@ -84,7 +84,7 @@ plt.xlabel('Genres')
 
 # Top 10 rated movies on Netflix
 top_rated = data[0:10].title
-print('\n\033[1m' + 'Top 10 rated movies on Netflix:' + '\n\033[0m', top_rated)
+print('\n\033[1m' + 'Top 10 rated movies on Netflix:' + '\n\033[0m', top_rated, '\n')
 
 from bs4 import BeautifulSoup
 import requests  # Importing library to make the HTTP request
@@ -95,7 +95,7 @@ r = requests.get(url)  # Packaging the request, sending the request and catching
 soup = BeautifulSoup(r.text, "html.parser")  # Creating a BeautifulSoup object from the HTML
 
 movies = soup.select('td.titleColumn')  # Selecting the column with movie titles
-imdb_ratings = [i.attrs.get('data-value')
+m_ratings = [i.attrs.get('data-value')
                 for i in soup.select('td.posterColumn span[name=ir]')]
 
 # Creating an empty list for storing movie info
@@ -107,20 +107,21 @@ for index in range(0, 10):
     movie = (' '.join(movie_str.split()).replace('.', ''))
     movie_title = movie[len(str(index)) + 1:-7]
     place = movie[:len(str(index)) - (len(movie))]
-    d = {"movie_title": movie_title, "place": place, "rating": imdb_ratings[index]}
+    d = {"movie_title": movie_title, "place": place, "rating": m_ratings[index]}
     list.append(d)  # Appending results to the list
 
 # Displaying Top 10 Movies and its rating.
+print('\033[1m' + 'Top 10 rated movies on IMDb Website and its rating:' + '\033[1m')
 for movie in list:
     print(movie['place'], '-', movie['movie_title'], '-', movie['rating'])
 
-# Getting one of the Top 10 titles of Netflix rated movies (Schindler's List)
+# Getting one of the Top 10 titles of Netflix rated movies (Schindler's List) via API
 # # Packaging the request, sending the request and catching the response
 url = "http://www.omdbapi.com/?t=Schindler's+List&plot=full&apikey=a6ba41bb"
-response = requests.get(url)
-print('\n', response)  # printing the response and response status code
+response = requests.get(url)  # Packaging the request, sending the request and catching the response
+print('\n', response)  # Printing the response and response status code
 
-# Getting the API response in JSON format and assigning it to a variable:
+# Getting the API response in JSON format and assigning it to a variable
 json_data = response.json()
 # Importing the JSON response into Pandas DataFrame:
 movie_request = pd.DataFrame(json_data.items(), columns=['Key', 'Value'])
