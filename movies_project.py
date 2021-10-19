@@ -8,7 +8,7 @@ netflix = pd.read_csv('netflix_titles.csv')  # , parse_dates=['date_added', 'rel
 imdb_movies = pd.read_csv('IMDb movies.csv')
 imdb_movies = imdb_movies[['imdb_title_id', 'title', 'year']]
 imdb_ratings = pd.read_csv('IMDb ratings.csv')
-imdb = pd.merge(imdb_movies, imdb_ratings, on='imdb_title_id')  # Merging IMDb movies and ratings
+#imdb = pd.merge(imdb_movies, imdb_ratings, on='imdb_title_id')  # Merging IMDb movies and ratings
 
 # Analysing IMDB ratings to get top rated movies on Netflix
 imdb_ratings = pd.read_csv('IMDb ratings.csv', usecols=['weighted_average_vote'])
@@ -81,10 +81,27 @@ plt.ylabel('Votes')
 plt.xlabel('Genres')
 #plt.show()
 
+# calculate the average star rating for each genre, but only include genres with at least 10 movies
+# manually creating a list of relevant genres
+data.Genre.value_counts()
+top_genres = ['Drama', 'Comedy', 'Action', 'Crime', 'Biography', 'Adventure', 'Animation', 'Horror', 'Mystery']
+print('\n', data[data.Genre.isin(top_genres)].groupby('Genre').Rating.mean())
 
 # Top 10 rated movies on Netflix
 top_rated = data[0:10].title
 print('\n\033[1m' + 'Top 10 rated movies on Netflix:' + '\n\033[0m', top_rated, '\n')
+
+# Top 1000 Movies by Content Rating
+data.rating.value_counts().plot(kind='bar', title='Top 1000 Movies by Content Rating')
+plt.xlabel('Content Rating')
+plt.ylabel('Number of Movies')
+#plt.show()
+
+
+# Calculating the average rating for each genre, but only include genres with at least 100 movies
+genre_ratings = data.groupby('Genre').Rating.agg(['count', 'mean'])  # Aggregate by count and mean
+print(genre_ratings[genre_ratings['count'] >= 100])  # Filtering using the count
+
 
 from bs4 import BeautifulSoup
 import requests  # Importing library to make the HTTP request
@@ -96,7 +113,7 @@ soup = BeautifulSoup(r.text, "html.parser")  # Creating a BeautifulSoup object f
 
 movies = soup.select('td.titleColumn')  # Selecting the column with movie titles
 m_ratings = [i.attrs.get('data-value')
-                for i in soup.select('td.posterColumn span[name=ir]')]
+                               for i in soup.select('td.posterColumn span[name=ir]')]
 
 # Creating an empty list for storing movie info
 list = []
@@ -111,12 +128,11 @@ for index in range(0, 10):
     list.append(d)  # Appending results to the list
 
 # Displaying Top 10 Movies and its rating.
-print('\033[1m' + 'Top 10 rated movies on IMDb Website and its rating:' + '\033[1m')
+print('\n\033[1m' + 'Top 10 rated movies on IMDb Website and its rating:' + '\033[1m')
 for movie in list:
     print(movie['place'], '-', movie['movie_title'], '-', movie['rating'])
 
 # Getting one of the Top 10 titles of Netflix rated movies (Schindler's List) via API
-# # Packaging the request, sending the request and catching the response
 url = "http://www.omdbapi.com/?t=Schindler's+List&plot=full&apikey=a6ba41bb"
 response = requests.get(url)  # Packaging the request, sending the request and catching the response
 print('\n', response)  # Printing the response and response status code
@@ -144,7 +160,7 @@ ax = sns.countplot(x="release_year",
 plt.gcf().subplots_adjust(bottom=0.15)
 plt.xticks(rotation=90)
 plt.title('Top 10 most released year in the Dataset')
-plt.ylabel('')
+plt.ylabel('Quantity of movies released')
 plt.xlabel('Released Year')
 #plt.show()
 
@@ -205,8 +221,17 @@ result_harm = pd.concat([data, one_hot_df], axis=1)  # Concatenating two datafra
 print(result_harm)  # Displaying results
 
 
-vote = data['Rating'].mean()
-print(vote)
 
-min_vote = data['Rating'].quantile(0.90)
-print(min_vote)
+
+
+
+
+
+# calculate the average duration for each genre
+#print(data.groupby('Genre').duration.mean())
+
+
+
+
+
+
