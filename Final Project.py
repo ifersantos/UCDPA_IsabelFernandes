@@ -32,7 +32,7 @@ plt.style.use('ggplot')
 X = heart_data.drop('target', 1).values  # dropping the target variable
 y = heart_data['target'].values
 pd.DataFrame.hist(heart_data, figsize=[13, 10], facecolor='#0072BD')
-plt.show()
+#plt.show()
 
 # checking the distribution of target variable - (Values - 1 -> Defective Heart & 0 -> Healthy heart)
 print('\n\033[1m' + 'Checking the distribution of target variable:' + '\n\033[1m', heart_data.target.value_counts())
@@ -47,7 +47,7 @@ import plotly.express as px  # Importing plotly with the alias (px)
 sns.set(style="darkgrid")  # setting the style
 fig = px.pie(heart_data, names="target",
              title="Quantity of Heart Problems vs No Heart Problems", height=500)
-fig.show()  # Displaying the fig
+#fig.show()  # Displaying the fig
 
 # Number of people with Heart Problems
 print('\n\033[1m' + 'Number of people with Heart Problems: ', (heart_data['target'] == 1).sum())
@@ -59,12 +59,12 @@ Healthy = heart_data[heart_data['target'] == 0]
 # Age Distribution of patients with positive heart disease
 ax = sns.distplot(No_healthy['age'], rug=True)
 plt.title("Age Distribution")
-plt.show()
+#plt.show()
 
 # Gender Distribution - Total Male vc Female in the dataset - Male = 1 - Female = 0
 sns.countplot(No_healthy['sex'], palette='viridis')
 plt.title('Gender distribution of Heart Disease patients', fontsize=15, weight='bold' )
-plt.show()
+#plt.show()
 
 # Getting the correlation of the columns
 correlation = heart_data.corr()
@@ -73,20 +73,20 @@ mask[np.triu_indices_from(mask)] = True
 with sns.axes_style("white"):
     f, ax = plt.subplots(figsize=(10, 8))
     sns.heatmap(correlation, center=0, cmap="coolwarm", mask=mask, annot=True, square=True, fmt='.2f')
-plt.show()
+#plt.show()
 
 # Visualizing the correlation data
 import matplotlib.pyplot as plt
 plt.figure(figsize=(10, 10))
 sns.heatmap(correlation, annot=True, fmt='.0%', cmap="Blues")
 plt.title('Correlation Between Variables', fontsize=20)
-plt.show()
+#plt.show()
 
 # Pairplot
 df_subset = heart_data[["age", "chol", "oldpeak","target", "thalach"]]
 sns.set_theme(style="ticks")
 sns.pairplot(df_subset, hue="target")
-plt.show()
+#plt.show()
 
 # splitting the features and target
 X = heart_data[heart_data.columns[:-1]]  # dropping target column
@@ -116,18 +116,32 @@ pred_lr = lr.predict(X_test)
 print('\n\033[1m' + 'Accuracy score for Logistic Regression: ', metrics.accuracy_score(y_test, pred_lr))
 print('\n\033[1m', classification_report(y_test, pred_lr))
 
+#Recall
+from sklearn.metrics import recall_score
+print('\n\033[1m' + 'Recall', recall_score(y_test, pred_lr, average=None))
+#Precision
+from sklearn.metrics import precision_score
+print('\n\033[1m' + 'Precision', precision_score(y_test, pred_lr, average=None))
+
 from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(y_test, pred_lr)
 print('\n\033[1m' + 'Confusion Matrix')
 print(cm, '\n\033[1m')
+
 
 # Random Forest Classifier
 from sklearn.ensemble import RandomForestClassifier
 rf = RandomForestClassifier(random_state=1)
 rf.fit(X_train, y_train)
 pred_rf = rf.predict(X_test)
+#Accuracy
 print('Accuracy score for Random Forest: ', metrics.accuracy_score(y_test, pred_rf))
 print('\n\033[1m', classification_report(y_test, pred_rf))
+
+#Recall
+print('\n\033[1m' + 'Recall', recall_score(y_test, pred_rf, average=None))
+#Precision
+print('\n\033[1m' + 'Precision', precision_score(y_test, pred_rf, average=None))
 
 cm2 = confusion_matrix(y_test, pred_rf)
 print('\n\033[1m' + 'Confusion Matrix')
@@ -140,6 +154,11 @@ nb.fit(X_train, y_train)
 nb_pred = nb.predict(X_test)
 print('\n\033[1m' + 'Accuracy score for Naive Bayes: ', metrics.accuracy_score(y_test, nb_pred))
 print('\n\033[1m' + '', classification_report(y_test, nb_pred))
+
+#Recall
+print('\n\033[1m' + 'Recall', recall_score(y_test, nb_pred, average=None))
+#Precision
+print('\n\033[1m' + 'Precision', precision_score(y_test, nb_pred, average=None))
 
 cm3 = confusion_matrix(y_test, nb_pred)
 print('\n\033[1m' + 'Confusion Matrix')
@@ -154,6 +173,11 @@ pred_knn = knn.predict(X_test)  # Predict the response for test dataset
 print('\n\033[1m' + "Accuracy score for KNeibhbors at K=3: ", metrics.accuracy_score(y_test, pred_knn))
 print('\n\033[1m', classification_report(y_test, pred_knn))
 
+#Recall
+print('\n\033[1m' + 'Recall', recall_score(y_test, pred_knn, average=None))
+#Precision
+print('\n\033[1m' + 'Precision', precision_score(y_test, pred_knn, average=None))
+
 cm4 = confusion_matrix(y_test, pred_knn)
 print('\n\033[1m' + 'Confusion Matrix')
 print(cm4, '\n\033[1m')
@@ -165,6 +189,11 @@ knn.fit(X_train, y_train)  #Train the model using the training sets
 pred_n5 = knn.predict(X_test)  # Predict the response for test dataset
 print('\n\033[1m' + "Accuracy score for KNeibhbors at K=5: ", metrics.accuracy_score(y_test, pred_n5))
 print('\n\033[1m', classification_report(y_test, pred_n5))
+
+#Recall
+print('\n\033[1m' + 'Recall', recall_score(y_test, pred_n5, average=None))
+#Precision
+print('\n\033[1m' + 'Precision', precision_score(y_test, pred_n5, average=None))
 
 cm5 = confusion_matrix(y_test, pred_n5)
 print('\n\033[1m' + 'Confusion Matrix')
@@ -183,7 +212,7 @@ plt.plot(range(1, 10), error_rate, color='blue', linestyle='--', marker='o', mar
 plt.title('Error Rate vs. K value')
 plt.xlabel('K')
 plt.ylabel('Error Rate')
-plt.show()
+#plt.show()
 
 print('\n' + "Minimum error:-", min(error_rate), "at K =", error_rate.index(min(error_rate)))
 print('Accuracy score: ', metrics.accuracy_score(y_test, pred_i))
@@ -200,10 +229,16 @@ plt.plot(range(1, 10), acc, color='blue', linestyle='dashed', marker='o', marker
 plt.title('Accuracy vs. K Value')
 plt.xlabel('K')
 plt.ylabel('Accuracy')
-plt.show()
+#plt.show()
 
 print('\n\033[1m' + "Maximum accuracy:-", max(acc), "at K =", acc.index(max(acc)))
 print('Accuracy score: ', metrics.accuracy_score(y_test, pred))
+
+#Recall
+print('\n\033[1m' + 'Recall', recall_score(y_test, pred, average=None))
+#Precision
+print('\n\033[1m' + 'Precision', precision_score(y_test, pred, average=None))
+
 
 cm7 = confusion_matrix(y_test, pred)
 print('\n\033[1m' + 'Confusion Matrix')
@@ -216,6 +251,11 @@ dt.fit(X_train, y_train)
 pred_dt = dt.predict(X_test)
 print('\n\033[1m' + 'Accuracy score for Decision Tree: ', metrics.accuracy_score(y_test, pred_dt))
 print('\n\033[1m', classification_report(y_test, pred_dt))
+
+#Recall
+print('\n\033[1m' + 'Recall', recall_score(y_test, pred_dt, average=None))
+#Precision
+print('\n\033[1m' + 'Precision', precision_score(y_test, pred_dt, average=None))
 
 cm6 = confusion_matrix(y_test, pred_dt)
 print('\n\033[1m' + 'Confusion Matrix')
@@ -297,7 +337,9 @@ else:
     print('This Person has Heart Disease')
 
 
+print('\n\033[1m' + '########')
 ### Netflix Movies and TV Shows — Exploratory Data Analysis (EDA) ###
+
 print('\n\033[1m' + "Netflix Movies and TV Shows — Exploratory Data Analysis (EDA)" + '\n\033[1m')
 
 import pandas as pd  # Importing pandas with the alias (pd)
