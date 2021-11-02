@@ -5,13 +5,13 @@ Specialist Certificate in Data Analytics Essentials
 
 
 
-Heart Disease Prediction Using Machine Learning
--
-Netflix Movies and TV Shows — Exploratory Data Analysis (EDA)
+Heart Disease Prediction Using Machine Learning / Netflix Movies and TV Shows — Exploratory Data Analysis (EDA)
 
 
 
 Machine Learning algorithms used:
+
+
 
 Logistic Regression (Scikit-learn)
 
